@@ -1,10 +1,53 @@
-describe("Game", function() {
-	var game;
-	
+describe("EventIndex", function(){
+	var eventIndex;
 	beforeEach(function() {
-		game = createGame();
+		index = createEventIndex();
+	});
+	it ("should start empty", function(){
+		expect(index.size()).toBe(0);
+	});
+	it("should index events by row and column", function(){
+		var evt=createEvent("take","white",5,4);
+		index.indexEvent(evt);
+		expect(index.get(5,4)).toBe(evt);
+		expect(index.size()).toBe(1);
+	});
+	it ("should ignore non field events", function(){
+        	index.indexEvent(createEvent("draw"));
+		expect(index.size()).toBe(0);
+ 	});
+	it("should index events on different rows and columns", function(){
+		var evt=createEvent("take","white",5,4);
+		index.indexEvent(evt);
+
+		var evt2=createEvent("take","black",5,5);
+		index.indexEvent(evt2);
+
+		expect(index.get(5,4)).toBe(evt);
+		expect(index.get(5,5)).toBe(evt2);
+
+		expect(index.size()).toBe(2);
 	});
 
+	it("should index only last event in case of multiple events on the same row and column", function(){
+		index.indexEvent(createEvent("take","white",5,4));
+		var evt=createEvent("flip","black",5,4);
+		index.indexEvent(evt);
+		expect(index.get(5,4)).toBe(evt);
+		expect(index.size()).toBe(1);
+	});
+
+});
+describe("Game", function() {
+	var game;
+	var previousCount;
+	var generatedEvents= function(){
+		return game.getEvents().slice(previousCount);
+	}
+	beforeEach(function() {
+		game = createGame();
+		previousCount=game.getEvents().length;
+	});
 	it("should start with four initial allocation events", function() {
 		expect(game.eventCount()).toEqual(5);
 		expect(game.getEvents()).toEqual([
@@ -17,5 +60,13 @@ describe("Game", function() {
 	it("should not allow clients to modify events", function(){
 		game.getEvents().push(createEvent("draw"));
 		expect(game.eventCount()).toEqual(5);
+	});
+	it("should reject a command if not that players turn", function () {
+		game.place("black", 4, 3);
+		expect(generatedEvents()).toEqual([createEvent("reject", "black")]);
+	});
+	it("should reject a command if already taken", function () {
+		game.place("white", 5, 4);
+		expect(generatedEvents()).toEqual([createEvent("reject", "white")]);
 	});
   });
