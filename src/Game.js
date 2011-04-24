@@ -1,4 +1,4 @@
-function createPositionIndex() {
+function createPositionIndex(events) {
 	var index = {};
 	size = 0;
 	var key = function (row, column) {
@@ -29,8 +29,18 @@ function createPositionIndex() {
 			}
 			return resultchain;
 			 	
+		},
+		tokenMajority: function(){
+			var majority=0;
+			for (var key in index){
+				if(index[key].token=="white") majority++; else majority--;
+			}
+			if (majority>0) return "white";
+			if (majority<0) return "black";
+			return "draw";
 		}
 	};
+	if (events) { events.forEach(result.indexEvent);}
 	return result;
 };
 function createEvent(eventType, token, row, column) {
@@ -106,8 +116,7 @@ function createGame(size,events) {
 			return _events.slice(0);
 		},
 		place: function (token, row, column) {
-			var index=createPositionIndex();
-			_events.forEach(index.indexEvent);
+			var index=createPositionIndex(_events);
 			var flippableTokens=getFlippableTokens(index,token,row,column);
 			if ( !validPosition(row,column) || next(_events)!=token || index.get(row,column) || flippableTokens.length==0){
 				_events.push(createEvent("reject",token));
@@ -117,11 +126,12 @@ function createGame(size,events) {
 			flippableTokens.forEach(function(toFlip){
 				_events.push(createEvent("flip",token,toFlip.row, toFlip.column));
 			});
-			_events.forEach(index.indexEvent);
+			index=createPositionIndex(_events);
 			if (hasFlippable(opposing(token),index)) 
 				_events.push(createEvent("next",opposing(token)));
 			else if (hasFlippable(token,index))
 				_events.push(createEvent("next",token));
+			else _events.push(createEvent("finish",index.tokenMajority()));
 		}
 	}
 	return result;

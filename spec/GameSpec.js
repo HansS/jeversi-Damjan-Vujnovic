@@ -104,7 +104,16 @@ describe("PositionIndex", function(){
 		expect(index.get(5,4)).toBe(evt);
 		expect(index.size()).toBe(1);
 	});
-
+	it ("tokenMajority should choose whoever has more tokens", function(){
+		var index=createPositionIndex([createEvent("take","white",1,1), createEvent("take","white",2,1), createEvent("take","black",3,1)]);
+		expect(index.tokenMajority()).toBe("white");
+		
+		var index=createPositionIndex([createEvent("take","black",1,1), createEvent("take","white",2,1), createEvent("take","black",3,1)]);
+		expect(index.tokenMajority()).toBe("black");
+		
+		var index=createPositionIndex([createEvent("take","white",2,1), createEvent("take","black",3,1)]);
+		expect(index.tokenMajority()).toBe("draw");
+	});
 });
 describe("getFlippableTokens", function(){
 	it("should look for flippable in all directions", function(){
@@ -114,8 +123,7 @@ describe("getFlippableTokens", function(){
 			    createEvent("take","black",2,2), createEvent("take","black",3,2), createEvent("take","black",4,2),
 			    createEvent("take","black",2,3),                                  createEvent("take","black",4,3),
 			    createEvent("take","black",2,4), createEvent("take","black",3,4), createEvent("take","black",4,4)];
-		var index=createPositionIndex();
-		events.forEach(index.indexEvent);
+		var index=createPositionIndex(events);
 		var result=getFlippableTokens(index,"white",3,3);
 		expect(result).toContain(createEvent("take","black",2,2));
 		expect(result).toContain(createEvent("take","black",3,2));
@@ -196,5 +204,12 @@ describe("Game", function() {
 		previousCount=4;
 		game.place("white",4,1);
 		expect(generatedEvents()).toContain(createEvent("next","white"));
+	});
+	it("should declare winner when no more flippable tokens", function(){
+		game=createGame(4, [createEvent("take","white",2,1), createEvent("take","black",3,1), 
+				   createEvent("next","white")]);
+		previousCount=4;
+		game.place("white",4,1);
+		expect(generatedEvents()).toContain(createEvent("finish","white"));
 	});
   });
