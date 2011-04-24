@@ -65,19 +65,6 @@ describe("PositionIndex", function(){
 
 		expect(index.size()).toBe(2);
 	});
-	it("should return all indexed events for nearby fields when asked for neighbours", function(){
-		var rightBottom=createEvent("take","white",5,4);
-		var bottom=createEvent("take","black",5,5);
-		var leftTop=createEvent("take","white",3,4);
-		var outside=createEvent("take","black",7,7);
-		index.indexEvent(rightBottom);
-		index.indexEvent(bottom);
-		index.indexEvent(leftTop);
-		index.indexEvent(outside);
-		expect(index.neighbours(4,5)).toEqual([
-			leftTop,rightBottom,bottom
-		]);
-	});
 
 	it("chain should return empty if next in direction is empty", function(){
 		expect(index.chain(2,2,-1,-1)).toEqual([]);

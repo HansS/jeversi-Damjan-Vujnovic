@@ -18,15 +18,6 @@ function createPositionIndex() {
 		get: function (row, column) {
 			return index[key(row,column)];
 		},
-		neighbours:function(row,column){
-			var result=[];
-			for (var row_offset=-1; row_offset<2; row_offset++){
-				for (var col_offset=-1; col_offset<2; col_offset++){
-				  if (index[key(row+row_offset,column+col_offset)]) result.push(index[key(row+row_offset,column+col_offset)]);
-				}
-			}
-			return result;
-		},
 		chain: function(before_row,before_column,row_direction,column_direction){
 			var resultchain=[];
 		        var current_row=before_row+row_direction;
@@ -72,13 +63,6 @@ var flippable=function(events, token){
 };
 function createGame() {
 	var _eventCount=0;
-
-	var containsToken = function (token, events) {
-		for (var i = 0; i < events.length; i++)
-			if (events[i].token === token)
-				return true;
-		return false;
-	};
 	var getFlippableTokens=function(index,token,row,column){
 		var result=[];
 		for (var row_direction=-1; row_direction<=1; row_direction++){
