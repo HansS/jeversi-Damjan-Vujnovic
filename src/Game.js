@@ -19,13 +19,25 @@ function createPositionIndex() {
 			return index[key(row,column)];
 		},
 		neighbours:function(row,column){
-			result=[];
+			var result=[];
 			for (var row_offset=-1; row_offset<2; row_offset++){
 				for (var col_offset=-1; col_offset<2; col_offset++){
 				  if (index[key(row+row_offset,column+col_offset)]) result.push(index[key(row+row_offset,column+col_offset)]);
 				}
 			}
 			return result;
+		},
+		chain: function(before_row,before_column,row_direction,column_direction){
+			var resultchain=[];
+		        var current_row=before_row+row_direction;
+	 		var current_column=before_column+column_direction;
+			while (index[key(current_row,current_column)]){
+				resultchain.push(index[key(current_row,current_column)]);
+				current_row=current_row+row_direction;
+				current_column=current_column+column_direction;
+			}
+			return resultchain;
+			 	
 		}
 	};
 	return result;
@@ -44,11 +56,11 @@ var opposing=function(token){
 	return token=="white"?"black":"white";
 };
 var next = function (events) {
-		for (var i = events.length - 1; i >= 0; i--) {
-			if (events[i].type === "next")
-				return events[i].token;
-		}
-		throw new Error("Cannot determine next token");
+	for (var i = events.length - 1; i >= 0; i--) {
+		if (events[i].type === "next")
+			return events[i].token;
+	}
+	throw new Error("Cannot determine next token");
 };
 var flippable=function(events, token){
 	var result=[];
@@ -57,7 +69,7 @@ var flippable=function(events, token){
 		else return result;
 	}
 	return [];
-}
+};
 function createGame() {
 	var _eventCount=0;
 
@@ -67,7 +79,16 @@ function createGame() {
 				return true;
 		return false;
 	};
-	
+	var getFlippableTokens=function(index,token,row,column){
+		var result=[];
+		for (var row_direction=-1; row_direction<=1; row_direction++){
+			for (var column_direction=-1; column_direction<=1; column_direction++){
+				if (row_direction!=0 || column_direction!=0)
+					result=result.concat(flippable(index.chain(row,column,row_direction,column_direction),token));
+			}
+		}
+		return result;
+	}
 	var events=[
                  createEvent("take","white",4,4),
                  createEvent("take","white",5,5),
@@ -86,7 +107,8 @@ function createGame() {
 		place: function (token, row, column) {
 			var index=createPositionIndex();
 			events.forEach(index.indexEvent);
-			var isOK = next(events)==token && !index.get(row,column) && containsToken(opposing(token),index.neighbours(row,column));
+			var flippableTokens=getFlippableTokens(index,token,row,column);
+			var isOK = next(events)==token && !index.get(row,column) && flippableTokens.length>0;
 			events.push(isOK ? createEvent("take",token,row,column) : createEvent("reject", token));
 		}
 	}

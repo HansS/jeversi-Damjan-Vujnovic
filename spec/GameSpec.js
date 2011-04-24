@@ -77,8 +77,37 @@ describe("PositionIndex", function(){
 		expect(index.neighbours(4,5)).toEqual([
 			leftTop,rightBottom,bottom
 		]);
-		
-});
+	});
+
+	it("chain should return empty if next in direction is empty", function(){
+		expect(index.chain(2,2,-1,-1)).toEqual([]);
+	});
+	it("chain should ignore oposite direction", function(){
+		var evt=createEvent("take","white",3,3);
+		index.indexEvent(evt);
+		expect(index.chain(2,2,-1,-1)).toEqual([]);
+	});
+	it("chain should return a single event if row/column in a direction after event is empty", function(){
+		var evt=createEvent("take","white",3,3);
+		index.indexEvent(evt);
+		expect(index.chain(2,2,1,1)).toEqual([evt]);
+	});
+	it("chain should return an uninterrupted sequence of events", function(){
+		var evt=createEvent("take","white",3,3);
+		var evt2=createEvent("take","white",4,4);
+		index.indexEvent(evt);
+		index.indexEvent(evt2);
+		index.indexEvent(createEvent("take","white",6,6));
+		expect(index.chain(2,2,1,1)).toEqual([evt,evt2]);
+	});
+	
+	it("chain should return a complete sequence of events if it hits a boundary", function(){
+		var evt=createEvent("take","white",7,7);
+		var evt2=createEvent("take","white",8,8);
+		index.indexEvent(evt);
+		index.indexEvent(evt2);
+		expect(index.chain(6,6,1,1)).toEqual([evt,evt2]);
+	});
 	it("should index only last event in case of multiple events on the same row and column", function(){
 		index.indexEvent(createEvent("take","white",5,4));
 		var evt=createEvent("flip","black",5,4);
