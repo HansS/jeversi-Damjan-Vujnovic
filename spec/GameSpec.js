@@ -5,7 +5,36 @@ describe("next", function(){
 		expect(next(events)).toEqual("white");
 	});
 });
+describe("flippable should return a continuous range of opposing tokens bound by the active token", function(){ 
+        it ("should return a single token if next is opposing", function(){
+		expect(flippable([createEvent("take","white",1,1),createEvent("take","black",1,2)],"black"))
+			.toEqual([createEvent("take","white",1,1)]);
+	});
 
+        it ("should return nothing if the range is empty", function(){
+		expect(flippable([],"black"))
+			.toEqual([]);
+	});
+        it ("should return nothing if next is not opposing", function(){
+		expect(flippable([createEvent("take","black",1,2)],"black"))
+			.toEqual([]);
+	});
+        it ("should ignore anything past the boundary", function(){
+		expect(flippable([createEvent("take","white",1,1),createEvent("take","black",1,2), createEvent("take","white",1,3), createEvent("take","black",1,4)],"black"))
+			.toEqual([createEvent("take","white",1,1)]);
+	});
+
+        it ("should capture a continuous range", function(){
+		expect(flippable([createEvent("take","white",1,1),createEvent("take","white",1,2), createEvent("take","white",1,3), createEvent("take","black",1,4)],"black"))
+			.toEqual([createEvent("take","white",1,1),createEvent("take","white",1,2), createEvent("take","white",1,3)]);
+	});
+
+        it ("should ignore unbound ranges", function(){
+		expect(flippable([createEvent("take","white",1,1),createEvent("take","white",1,2), createEvent("take","white",1,3)]))
+			.toEqual([]);
+	});
+
+});
 describe("PositionIndex", function(){
 	var eventIndex;
 	beforeEach(function() {
@@ -90,11 +119,11 @@ describe("Game", function() {
 		game.place("white", 5, 4);
 		expect(generatedEvents()).toEqual([createEvent("reject", "white")]);
 	});
-	it("should reject a command if not next to opposing token", function () {
+	it("should reject a command if not next to a flippable token", function () {
 		game.place("white", 7, 4);
 		expect(generatedEvents()).toEqual([createEvent("reject", "white")]);
 	});
-	it("should accept a command if next to opposing token", function () {
+	it("should accept a command if next to a flippable token", function () {
 		game.place("white", 6, 4);
 		expect(generatedEvents()).toEqual([createEvent("take", "white",6,4)]);
 	});

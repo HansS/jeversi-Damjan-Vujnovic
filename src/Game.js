@@ -40,6 +40,9 @@ function createEvent(eventType, token, row, column) {
 	return result;
 };
 
+var opposing=function(token){
+	return token=="white"?"black":"white";
+};
 var next = function (events) {
 		for (var i = events.length - 1; i >= 0; i--) {
 			if (events[i].type === "next")
@@ -47,12 +50,17 @@ var next = function (events) {
 		}
 		throw new Error("Cannot determine next token");
 };
-
+var flippable=function(events, token){
+	var result=[];
+	for (var i=0; i<events.length; i++) {
+		if (events[i].token==opposing(token)) result.push(events[i]);
+		else return result;
+	}
+	return [];
+}
 function createGame() {
 	var _eventCount=0;
-	var opposing=function(token){
-		return token=="white"?"black":"white";
-	};
+
 	var containsToken = function (token, events) {
 		for (var i = 0; i < events.length; i++)
 			if (events[i].token === token)
