@@ -61,9 +61,10 @@ var flippable=function(events, token){
 	}
 	return [];
 };
-function createGame() {
+function createGame(size) {
 	var _eventCount=0;
-	var _boardSize=8;
+	var _boardSize=size?size:8;
+	var _center=_boardSize/2;
 	var getFlippableTokens=function(index,token,row,column){
 		var result=[];
 		for (var row_direction=-1; row_direction<=1; row_direction++){
@@ -75,10 +76,10 @@ function createGame() {
 		return result;
 	}
 	var events=[
-                 createEvent("take","white",4,4),
-                 createEvent("take","white",5,5),
-                 createEvent("take","black",5,4),
-                 createEvent("take","black",4,5),
+                 createEvent("take","white",_center, _center),
+                 createEvent("take","white",_center+1, _center+1),
+                 createEvent("take","black",_center+1, _center),
+                 createEvent("take","black",_center,_center+1),
                  createEvent("next","white")];
 
 	var validPosition=function(row,column){

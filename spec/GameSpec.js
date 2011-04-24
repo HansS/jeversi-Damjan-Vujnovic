@@ -130,17 +130,17 @@ describe("Game", function() {
 		expect(game.eventCount()).toEqual(5);
 	});
 	it("should reject placement outside of bounds", function(){
-		game.place("white",-1,-1);
+		game=createGame(2);
+
+		game.place("white",3,1);
 		expect(generatedEvents()).toContain(createEvent("reject","white"));
 
-		game.place("white",8,-1);
-		expect(generatedEvents()).toContain(createEvent("reject","white"));
-
-		game.place("white",-10,1);
+		game.place("white",1,3);
 		expect(generatedEvents()).toContain(createEvent("reject","white"));
 	
-		game.place("white",9,4);
+		game.place("white",2,-1);
 		expect(generatedEvents()).toContain(createEvent("reject","white"));
+
 	});
 	it("should reject a command if not that players turn", function () {
 		game.place("black", 4, 3);
