@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Game Runner</title>
+  <script type="text/javascript" src="src/Game.js"></script>
+  <script type="text/javascript" src="src/GameFrame.js"></script>
+  <link rel="stylesheet" type="text/css" href="game.css">
+</head>
+<body>
+<table cellspacing="0" cellpadding="0" style="border:1px solid black; width:600px;">
+<tr><td><div id="white" class="gameboard" /></td><td><div id="black" class="gameboard"></div></td></tr>
+<tr><td valign="top"><form action="#"><input type="button" id="start" value="start" /></form></td><td><div id="log"></div></td></tr>
+</table>
+<script type="text/javascript">
+	var controller=createGameController();
+	var whiteFrame=createGameFrame(document.getElementById("white"), controller, "white");
+	var blackFrame=createGameFrame(document.getElementById("black"), controller, "black");
+	document.getElementById("start").onclick=function(){
+		controller.startGame();
+	};
+</script>
+
+
+
+
+</body>
+</html>

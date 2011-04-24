@@ -109,6 +109,9 @@ function createGame(size,events) {
 		return false;
 	}
 	var result={
+		getBoardSize: function(){
+			return _boardSize;
+		},
 		eventCount: function(){
 			return _events.length;
 		},
