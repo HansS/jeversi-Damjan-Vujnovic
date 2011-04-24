@@ -61,21 +61,26 @@ var flippable=function(events, token){
 	}
 	return [];
 };
-function createGame(size) {
+
+var getFlippableTokens=function(index,token,row,column){
+	var result=[];
+	for (var row_direction=-1; row_direction<=1; row_direction++){
+		for (var column_direction=-1; column_direction<=1; column_direction++){
+			if (row_direction!=0 || column_direction!=0){
+				var chain=index.chain(row,column,row_direction,column_direction);
+				var flipInChain=flippable(chain,token);
+				result=result.concat(flipInChain);
+			}
+		}
+	}
+	return result;
+}
+function createGame(size,events) {
 	var _eventCount=0;
 	var _boardSize=size?size:8;
 	var _center=_boardSize/2;
-	var getFlippableTokens=function(index,token,row,column){
-		var result=[];
-		for (var row_direction=-1; row_direction<=1; row_direction++){
-			for (var column_direction=-1; column_direction<=1; column_direction++){
-				if (row_direction!=0 || column_direction!=0)
-					result=result.concat(flippable(index.chain(row,column,row_direction,column_direction),token));
-			}
-		}
-		return result;
-	}
-	var _events=[
+
+	var _events=events?events:[
                  createEvent("take","white",_center, _center),
                  createEvent("take","white",_center+1, _center+1),
                  createEvent("take","black",_center+1, _center),
@@ -83,7 +88,15 @@ function createGame(size) {
                  createEvent("next","white")];
 
 	var validPosition=function(row,column){
-		return row>0 && column>0 && row<_boardSize && column<_boardSize;
+		return row>0 && column>0 && row<=_boardSize && column<=_boardSize;
+	}
+	var hasFlippable=function(token,index){
+		for (var row=1; row<=_boardSize; row++)
+			for (var column=1; column<=_boardSize; column++){
+				if (!index.get(row,column) && getFlippableTokens(index,token,row,column).length>0)
+					return true;
+			}		
+		return false;
 	}
 	var result={
 		eventCount: function(){
@@ -104,7 +117,11 @@ function createGame(size) {
 			flippableTokens.forEach(function(toFlip){
 				_events.push(createEvent("flip",token,toFlip.row, toFlip.column));
 			});
-			_events.push(createEvent("next",opposing(token)));
+			_events.forEach(index.indexEvent);
+			if (hasFlippable(opposing(token),index)) 
+				_events.push(createEvent("next",opposing(token)));
+			else if (hasFlippable(token,index))
+				_events.push(createEvent("next",token));
 		}
 	}
 	return result;

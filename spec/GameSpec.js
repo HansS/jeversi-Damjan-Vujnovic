@@ -9,6 +9,8 @@ describe("flippable should return a continuous range of opposing tokens bound by
         it ("should return a single token if next is opposing", function(){
 		expect(flippable([createEvent("take","white",1,1),createEvent("take","black",1,2)],"black"))
 			.toEqual([createEvent("take","white",1,1)]);
+		expect(flippable([createEvent("take","black",2,2),createEvent("take","white",1,1)],"white"))
+			.toEqual([createEvent("take","black",2,2)]);
 	});
 
         it ("should return nothing if the range is empty", function(){
@@ -104,6 +106,28 @@ describe("PositionIndex", function(){
 	});
 
 });
+describe("getFlippableTokens", function(){
+	it("should look for flippable in all directions", function(){
+		var events=[createEvent("take","white",1,1), createEvent("take","white",3,1), createEvent("take","white",5,1),
+			    createEvent("take","white",1,3), 				      createEvent("take","white",5,3),
+			    createEvent("take","white",1,5), createEvent("take","white",3,5), createEvent("take","white",5,5),
+			    createEvent("take","black",2,2), createEvent("take","black",3,2), createEvent("take","black",4,2),
+			    createEvent("take","black",2,3),                                  createEvent("take","black",4,3),
+			    createEvent("take","black",2,4), createEvent("take","black",3,4), createEvent("take","black",4,4)];
+		var index=createPositionIndex();
+		events.forEach(index.indexEvent);
+		var result=getFlippableTokens(index,"white",3,3);
+		expect(result).toContain(createEvent("take","black",2,2));
+		expect(result).toContain(createEvent("take","black",3,2));
+		expect(result).toContain(createEvent("take","black",4,2));
+		expect(result).toContain(createEvent("take","black",2,3));
+		expect(result).toContain(createEvent("take","black",4,3));
+		expect(result).toContain(createEvent("take","black",2,4));
+		expect(result).toContain(createEvent("take","black",3,4));
+		expect(result).toContain(createEvent("take","black",4,4));
+		expect(result.length).toEqual(8);
+	});
+});
 describe("Game", function() {
 	var game;
 	var previousCount;
@@ -165,5 +189,12 @@ describe("Game", function() {
 	it("should allow the opposing token to play", function(){
 		game.place("white",6,4);
 		expect(generatedEvents()).toContain(createEvent("next","black"));
+	});
+	it("should not allow the opposing token to play if there are no flippable tokens. the following scenario allows only white to play after 3,1",function(){
+		game=createGame(4, [createEvent("take","white",2,1), createEvent("take","black",3,1), createEvent("take","black",2,2),
+				   createEvent("next","white")]);
+		previousCount=4;
+		game.place("white",4,1);
+		expect(generatedEvents()).toContain(createEvent("next","white"));
 	});
   });
