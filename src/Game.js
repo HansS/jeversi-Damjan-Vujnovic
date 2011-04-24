@@ -63,6 +63,7 @@ var flippable=function(events, token){
 };
 function createGame() {
 	var _eventCount=0;
+	var _boardSize=8;
 	var getFlippableTokens=function(index,token,row,column){
 		var result=[];
 		for (var row_direction=-1; row_direction<=1; row_direction++){
@@ -80,7 +81,9 @@ function createGame() {
                  createEvent("take","black",4,5),
                  createEvent("next","white")];
 
-
+	var validPosition=function(row,column){
+		return row>0 && column>0 && row<_boardSize && column<_boardSize;
+	}
 	var result={
 		eventCount: function(){
 			return events.length;
@@ -92,8 +95,15 @@ function createGame() {
 			var index=createPositionIndex();
 			events.forEach(index.indexEvent);
 			var flippableTokens=getFlippableTokens(index,token,row,column);
-			var isOK = next(events)==token && !index.get(row,column) && flippableTokens.length>0;
-			events.push(isOK ? createEvent("take",token,row,column) : createEvent("reject", token));
+			if ( !validPosition(row,column) || next(events)!=token || index.get(row,column) || flippableTokens.length==0){
+				events.push(createEvent("reject",token));
+				return;
+			}
+			events.push(createEvent("take",token,row,column));
+			flippableTokens.forEach(function(toFlip){
+				events.push(createEvent("flip",token,toFlip.row, toFlip.column));
+			});
+			events.push(createEvent("next",opposing(token)));
 		}
 	}
 	return result;

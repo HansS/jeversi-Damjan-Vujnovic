@@ -108,7 +108,9 @@ describe("Game", function() {
 	var game;
 	var previousCount;
 	var generatedEvents= function(){
-		return game.getEvents().slice(previousCount);
+		var res= game.getEvents().slice(previousCount);
+		previousCount=game.getEvents().length;
+		return res;
 	}
 	beforeEach(function() {
 		game = createGame();
@@ -127,6 +129,19 @@ describe("Game", function() {
 		game.getEvents().push(createEvent("draw"));
 		expect(game.eventCount()).toEqual(5);
 	});
+	it("should reject placement outside of bounds", function(){
+		game.place("white",-1,-1);
+		expect(generatedEvents()).toContain(createEvent("reject","white"));
+
+		game.place("white",8,-1);
+		expect(generatedEvents()).toContain(createEvent("reject","white"));
+
+		game.place("white",-10,1);
+		expect(generatedEvents()).toContain(createEvent("reject","white"));
+	
+		game.place("white",9,4);
+		expect(generatedEvents()).toContain(createEvent("reject","white"));
+	});
 	it("should reject a command if not that players turn", function () {
 		game.place("black", 4, 3);
 		expect(generatedEvents()).toEqual([createEvent("reject", "black")]);
@@ -141,6 +156,14 @@ describe("Game", function() {
 	});
 	it("should accept a command if next to a flippable token", function () {
 		game.place("white", 6, 4);
-		expect(generatedEvents()).toEqual([createEvent("take", "white",6,4)]);
+		expect(generatedEvents()).toContain(createEvent("take", "white",6,4));
+	});
+	it("should flip all flippable tokens after a successful placement", function() {
+		game.place("white",6,4);
+		expect(generatedEvents()).toContain(createEvent("flip","white",5,4));
+	});
+	it("should allow the opposing token to play", function(){
+		game.place("white",6,4);
+		expect(generatedEvents()).toContain(createEvent("next","black"));
 	});
   });
