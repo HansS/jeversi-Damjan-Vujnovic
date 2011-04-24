@@ -1,7 +1,15 @@
-describe("EventIndex", function(){
+describe("next", function(){
+	it ("should give last event of type next", function(){
+		var events=[createEvent("next","black"),
+			createEvent("next","white")];
+		expect(next(events)).toEqual("white");
+	});
+});
+
+describe("PositionIndex", function(){
 	var eventIndex;
 	beforeEach(function() {
-		index = createEventIndex();
+		index = createPositionIndex();
 	});
 	it ("should start empty", function(){
 		expect(index.size()).toBe(0);
@@ -28,7 +36,20 @@ describe("EventIndex", function(){
 
 		expect(index.size()).toBe(2);
 	});
-
+	it("should return all indexed events for nearby fields when asked for neighbours", function(){
+		var rightBottom=createEvent("take","white",5,4);
+		var bottom=createEvent("take","black",5,5);
+		var leftTop=createEvent("take","white",3,4);
+		var outside=createEvent("take","black",7,7);
+		index.indexEvent(rightBottom);
+		index.indexEvent(bottom);
+		index.indexEvent(leftTop);
+		index.indexEvent(outside);
+		expect(index.neighbours(4,5)).toEqual([
+			leftTop,rightBottom,bottom
+		]);
+		
+});
 	it("should index only last event in case of multiple events on the same row and column", function(){
 		index.indexEvent(createEvent("take","white",5,4));
 		var evt=createEvent("flip","black",5,4);
@@ -68,5 +89,13 @@ describe("Game", function() {
 	it("should reject a command if already taken", function () {
 		game.place("white", 5, 4);
 		expect(generatedEvents()).toEqual([createEvent("reject", "white")]);
+	});
+	it("should reject a command if not next to opposing token", function () {
+		game.place("white", 7, 4);
+		expect(generatedEvents()).toEqual([createEvent("reject", "white")]);
+	});
+	it("should accept a command if next to opposing token", function () {
+		game.place("white", 6, 4);
+		expect(generatedEvents()).toEqual([createEvent("take", "white",6,4)]);
 	});
   });
