@@ -41,7 +41,7 @@ function createGameFrame(element,controller,token){
   }
   var redraw=function(){
 	var heading=document.createElement("h1");
-	heading.innerText=token;
+	heading.innerHTML=token;
 	element.appendChild(heading);
 	_status=document.createElement("span");
         element.appendChild(_status);
@@ -69,20 +69,20 @@ function createGameFrame(element,controller,token){
   controller.addGameStartListener(function(){
 	clear();
 	redraw();
-        _status.innerText="new game started";
+        _status.innerHTML="new game started";
   });
   controller.addEventListener(function(event){
 	if (event.type=="take" || event.type=="flip"){
        		_buttons[key(event.row,event.column)].value=event.token[0];
 	 }
 	else if (event.type=="next"){
-		_status.innerText=event.token + " is next";
+		_status.innerHTML=event.token + " is next";
 	}
 	else if (event.type=="reject"){
-		_status.innerText="invalid move by "+event.token;
+		_status.innerHTML="invalid move by "+event.token;
 	}
 	else if (event.type="finish"){
-		_status.innerText="game over. winner:"+event.token;
+		_status.innerHTML="game over. winner:"+event.token;
 	}
   });
 }
