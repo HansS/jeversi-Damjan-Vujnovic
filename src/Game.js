@@ -26,7 +26,7 @@ var jeversi = (function () {
 				chain: function (before_row, before_column, row_direction, column_direction) {
 					var resultchain = [],
 					current_row = before_row + row_direction,
-			 		current_column = before_column + column_direction;
+					current_column = before_column + column_direction;
 					while (index[key(current_row, current_column)]) {
 						resultchain.push(index[key(current_row,current_column)]);
 						current_row = current_row + row_direction;
@@ -109,7 +109,7 @@ var jeversi = (function () {
 				return row > 0 && column > 0 && row <= _boardSize && column <= _boardSize;
 			},
 			hasFlippable = function (token, index) {
-			    var row, column;
+				var row, column;
 				for (row = 1; row <= _boardSize; row++) {
 					for (column = 1; column <= _boardSize; column++) {
 						if (!index.get(row, column) && jeversi.getFlippableTokens(index, token, row, column).length) {
