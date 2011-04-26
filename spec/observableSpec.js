@@ -1,13 +1,13 @@
-describe('eventDispatcher', function () {
-  it('should use eventDispatcher as a mixin', function () {
+describe('observable', function () {
+  it('should use observable as a mixin', function () {
     var base = {}, result;
     
-    result = eventDispatcher(base);
+    result = observable(base);
     
     expect(result).toBe(base);
   });
   it('should use addEventListener method to add event listener', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     listener = function () {};
     
     underTest.addEventListener(listener);
@@ -15,7 +15,7 @@ describe('eventDispatcher', function () {
     expect(underTest.listeners()).toEqual([listener]);
   });
   it('should use dispatchEvent to invoke registered listener', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     result,
     listener = function () {
       result = 'listenerInvoked';
@@ -28,14 +28,14 @@ describe('eventDispatcher', function () {
   });
   //Same test, but using a Jasmine spy
   it('should use dispatchEvent to invoke registered listener', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     listener = jasmine.createSpy();
     underTest.addEventListener(listener);
     underTest.dispatchEvent('argument');
     expect(listener).toHaveBeenCalledWith('argument');
   });
   it('should be able to add multiple listeners', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     firstListener = jasmine.createSpy(),
     secondListener = jasmine.createSpy();
     underTest.addEventListener(firstListener);
@@ -47,7 +47,7 @@ describe('eventDispatcher', function () {
     expect(secondListener).toHaveBeenCalledWith('argument');
   });
   it('should be able to add listener for an event type', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     listenerOnTypeA = jasmine.createSpy(),
     listenerOnTypeB = jasmine.createSpy();
     underTest.addEventListener('TypeA', listenerOnTypeA);
@@ -59,7 +59,7 @@ describe('eventDispatcher', function () {
     expect(listenerOnTypeB).not.toHaveBeenCalled();
   });
   it('should invoke all listeners, even if one of them throws an error', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     badListener = jasmine.createSpy().andThrow('Error!'),
     goodListener = jasmine.createSpy();
     underTest.addEventListener('EventType', badListener);
@@ -71,7 +71,7 @@ describe('eventDispatcher', function () {
     expect(goodListener).toHaveBeenCalledWith('argument');
   });
   it('should be able to specify the order in which listeners are invoked, by setting priority', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     lowPriorityListener = function () { result += 'first:'; },
     highPriorityListener = function () { result += 'second:'; },
     result = ':';
@@ -83,7 +83,7 @@ describe('eventDispatcher', function () {
     expect(result).toBe(':second:first:');
   });
   it('should be able to cancel event propagation by returning false from event listener', function () {
-    var underTest = eventDispatcher({}),
+    var underTest = observable({}),
     firstListener = jasmine.createSpy().andReturn(false),
     secondListener = jasmine.createSpy();
     underTest.addEventListener('EventType', firstListener);
