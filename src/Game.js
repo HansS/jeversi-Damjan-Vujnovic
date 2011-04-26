@@ -98,7 +98,8 @@ var jeversi = (function () {
 			var _eventCount = 0,
 			_boardSize = size || 8,
 			_center = _boardSize / 2,
-			_events=events || [
+			_events=events || [			                 
+				jeversi.createEvent("start"),
 				jeversi.createEvent("take", "white", _center, _center),
 				jeversi.createEvent("take", "white", _center + 1, _center + 1),
 				jeversi.createEvent("take", "black", _center + 1, _center),

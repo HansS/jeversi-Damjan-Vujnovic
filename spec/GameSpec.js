@@ -168,9 +168,10 @@ describe("Game", function () {
 		game = jeversi.createGame();
 		previousCount = game.getEvents().length;
 	});
-	it("should start with four initial allocation events", function () {
-		expect(game.eventCount()).toEqual(5);
+	it("should start with a start, four initial allocation events and a next", function () {
+		expect(game.eventCount()).toEqual(6);
 		expect(game.getEvents()).toEqual([
+			jeversi.createEvent("start"),		                                  
 			jeversi.createEvent("take", "white", 4, 4),
 			jeversi.createEvent("take", "white", 5, 5),
 			jeversi.createEvent("take", "black", 5, 4),
@@ -180,7 +181,7 @@ describe("Game", function () {
 	});
 	it("should not allow clients to modify events", function () {
 		game.getEvents().push(jeversi.createEvent("draw"));
-		expect(game.eventCount()).toEqual(5);
+		expect(game.eventCount()).toEqual(6);
 	});
 	it("should reject placement outside of bounds", function () {
 		game = jeversi.createGame(2);
