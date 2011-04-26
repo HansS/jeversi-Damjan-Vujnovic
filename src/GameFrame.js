@@ -23,7 +23,7 @@ function createGameController(){
 	  	sendEvents(newEvents);	
 	},
         startGame:function(){
-      		_game=createGame();
+      		_game=jeversi.createGame();
 		_startGameListeners.forEach(function(listener){ listener(); });
 		sendEvents(_game.getEvents()); 
 	}
