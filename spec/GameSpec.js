@@ -158,19 +158,25 @@ describe("getFlippableTokens", function () {
 });
 
 describe("Game", function () {
-	var game, previousCount,
+	var game, previousCount,eventBuffer=[],
 	generatedEvents = function () {
-		var result = game.getEvents().slice(previousCount);
-		previousCount = game.getEvents().length;
-		return result;
+		copy=eventBuffer;
+		eventBuffer=[];
+		return copy;
+	};
+	clearEvents=function(){
+		eventBuffer=[];
 	};
 	beforeEach(function () {
 		game = jeversi.createGame();
-		previousCount = game.getEvents().length;
+		game.start();
+		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });
 	});
 	it("should start with a start, four initial allocation events and a next", function () {
-		expect(game.eventCount()).toEqual(6);
-		expect(game.getEvents()).toEqual([
+		game = jeversi.createGame();
+		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });
+		game.start();
+		expect(generatedEvents()).toEqual([
 			jeversi.createEvent("start"),		                                  
 			jeversi.createEvent("take", "white", 4, 4),
 			jeversi.createEvent("take", "white", 5, 5),
@@ -179,12 +185,11 @@ describe("Game", function () {
 			jeversi.createEvent("next", "white")
 		]);
 	});
-	it("should not allow clients to modify events", function () {
-		game.getEvents().push(jeversi.createEvent("draw"));
-		expect(game.eventCount()).toEqual(6);
-	});
+		
 	it("should reject placement outside of bounds", function () {
 		game = jeversi.createGame(2);
+		game.start();
+		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });		
 		game.place("white", 3, 1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("reject", "white"));
 		game.place("white", 1, 3);
@@ -192,6 +197,7 @@ describe("Game", function () {
 		game.place("white", 2, -1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("reject", "white"));
 	});
+		
 	it("should reject a command if not that players turn", function () {
 		game.place("black", 4, 3);
 		expect(generatedEvents()).toEqual([jeversi.createEvent("reject", "black")]);
@@ -222,7 +228,8 @@ describe("Game", function () {
 			jeversi.createEvent("take","black", 3, 1),
 			jeversi.createEvent("take","black", 2, 2),
 			jeversi.createEvent("next","white")]);
-		previousCount = 4;
+		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });		
+		
 		game.place("white", 4, 1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("next", "white"));
 	});
@@ -231,7 +238,7 @@ describe("Game", function () {
 			jeversi.createEvent("take", "white", 2, 1),
 			jeversi.createEvent("take", "black", 3, 1),
 			jeversi.createEvent("next", "white")]);
-		previousCount = 4;
+		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });		
 		game.place("white", 4, 1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("finish", "white"));
 	});

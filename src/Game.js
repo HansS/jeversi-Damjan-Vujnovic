@@ -98,14 +98,7 @@ var jeversi = (function () {
 			var _eventCount = 0,
 			_boardSize = size || 8,
 			_center = _boardSize / 2,
-			_events=events || [			                 
-				jeversi.createEvent("start"),
-				jeversi.createEvent("take", "white", _center, _center),
-				jeversi.createEvent("take", "white", _center + 1, _center + 1),
-				jeversi.createEvent("take", "black", _center + 1, _center),
-				jeversi.createEvent("take", "black", _center, _center + 1),
-				jeversi.createEvent("next", "white")
-			],
+			_events=events||[],
 			validPosition = function (row, column) {
 				return row > 0 && column > 0 && row <= _boardSize && column <= _boardSize;
 			},
@@ -120,7 +113,7 @@ var jeversi = (function () {
 				}
 				return false;
 			},
-			game = {
+			game = observable({
 				getBoardSize: function () {
 					return _boardSize;
 				},
@@ -130,27 +123,40 @@ var jeversi = (function () {
 				getEvents: function () {
 					return _events.slice(0);
 				},
+				pushEvent: function (event){
+					//alert(event);
+					game.dispatchEvent("EventReceived", event);
+					_events.push(event);
+				},
+				start: function () {
+					[jeversi.createEvent("start"),
+					jeversi.createEvent("take", "white", _center, _center),
+					jeversi.createEvent("take", "white", _center + 1, _center + 1),
+					jeversi.createEvent("take", "black", _center + 1, _center),
+					jeversi.createEvent("take", "black", _center, _center + 1),
+					jeversi.createEvent("next", "white")].forEach(game.pushEvent);		
+				},
 				place: function (token, row, column) {
 					var index = jeversi.createPositionIndex(_events),
 					flippableTokens = jeversi.getFlippableTokens(index, token, row, column);
 					if (!validPosition(row,column) || jeversi.next(_events) != token || index.get(row,column) || !flippableTokens.length) {
-						_events.push(jeversi.createEvent("reject", token));
+						game.pushEvent(jeversi.createEvent("reject", token));
 						return;
 					}
-					_events.push(jeversi.createEvent("take", token, row, column));
+					game.pushEvent(jeversi.createEvent("take", token, row, column));
 					flippableTokens.forEach(function (toFlip) {
-						_events.push(jeversi.createEvent("flip", token, toFlip.row, toFlip.column));
+						game.pushEvent(jeversi.createEvent("flip", token, toFlip.row, toFlip.column));
 					});
 					index = jeversi.createPositionIndex(_events);
 					if (hasFlippable(opposing(token), index)) {
-						_events.push(jeversi.createEvent("next", opposing(token)));
+						game.pushEvent(jeversi.createEvent("next", opposing(token)));
 					} else if (hasFlippable(token, index)) {
-						_events.push(jeversi.createEvent("next", token));
+						game.pushEvent(jeversi.createEvent("next", token));
 					} else {
-						_events.push(jeversi.createEvent("finish", index.tokenMajority()));
+						game.pushEvent(jeversi.createEvent("finish", index.tokenMajority()));
 					}
 				}
-			};
+			});
 			return game;
 		}
 	};
