@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>Game Runner</title>
+  <script type="text/javascript" src="src/observable.js"></script>
   <script type="text/javascript" src="src/Game.js"></script>
   <script type="text/javascript" src="src/GameFrame.js"></script>
   <link rel="stylesheet" type="text/css" href="game.css">
@@ -13,12 +14,11 @@
 <tr><td valign="top"><form action="#"><input type="button" id="start" value="start" /></form></td><td><div id="log"></div></td></tr>
 </table>
 <script type="text/javascript">
-	var controller=createGameController();
-	var whiteFrame=createGameFrame(document.getElementById("white"), controller, "white");
-	var blackFrame=createGameFrame(document.getElementById("black"), controller, "black");
-	document.getElementById("start").onclick=function(){
-		controller.startGame();
-	};
+	var game=jeversi.createGame();
+	var whiteFrame=createGameFrame(document.getElementById("white"), game, "white");
+	var blackFrame=createGameFrame(document.getElementById("black"), game, "black");
+	document.getElementById("start").onclick=game.start;
+	
 </script>
 
 

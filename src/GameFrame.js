@@ -1,35 +1,4 @@
-function createGameController(){
-  var _game;
-  var _startGameListeners=[];
-  var _eventListeners=[];
-  var sendEvents=function(newEvents){
-  	newEvents.forEach(function(event){
-  		_eventListeners.forEach(function(listener){
-			listener(event);
-                });
-        });
-  }
-  var result={
-  	addEventListener:function(listener){
-	  _eventListeners.push(listener);
-        },
-        addGameStartListener:function(listener){
-	  _startGameListeners.push(listener);
-        },
-        place:function(token,row,column){
-		var previousCount=_game.getEvents().length;
-		_game.place(token,row,column);
-		var newEvents=_game.getEvents().slice(previousCount);
-	  	sendEvents(newEvents);	
-	},
-        startGame:function(){
-      		_game=jeversi.createGame();
-		_startGameListeners.forEach(function(listener){ listener(); });
-		sendEvents(_game.getEvents()); 
-	}
-  };
-  return result;
-}
+
 function createGameFrame(element,controller,token){
   var clear=function(){
     while(element.hasChildNodes()) element.removeChild(element.firstChild);
@@ -66,12 +35,7 @@ function createGameFrame(element,controller,token){
 	}
 	element.appendChild(table);
   }
-  controller.addGameStartListener(function(){
-	clear();
-	redraw();
-        _status.innerHTML="new game started";
-  });
-  controller.addEventListener(function(event){
+  controller.addEventListener("EventReceived",function(event){
 	if (event.type=="take" || event.type=="flip"){
        		_buttons[key(event.row,event.column)].value=event.token[0];
 	 }
@@ -81,8 +45,13 @@ function createGameFrame(element,controller,token){
 	else if (event.type=="reject"){
 		_status.innerHTML="invalid move by "+event.token;
 	}
-	else if (event.type="finish"){
+	else if (event.type=="finish"){
 		_status.innerHTML="game over. winner:"+event.token;
+	}
+	else if (event.type=="start"){
+		clear();
+		redraw();
+	    _status.innerHTML="new game started";
 	}
   });
 }
