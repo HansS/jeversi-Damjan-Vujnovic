@@ -1,8 +1,9 @@
 
-function createGameFrame(element,controller,token){
+function createGameFrame(element,controller){
   var clear=function(){
     while(element.hasChildNodes()) element.removeChild(element.firstChild);
   }
+  var token;
   var _status;
   var _buttons={};
   var key=function(row,column){
@@ -35,23 +36,30 @@ function createGameFrame(element,controller,token){
 	}
 	element.appendChild(table);
   }
-  controller.addEventListener("EventReceived",function(event){
-	if (event.type=="take" || event.type=="flip"){
-       		_buttons[key(event.row,event.column)].value=event.token[0];
-	 }
-	else if (event.type=="next"){
-		_status.innerHTML=event.token + " is next";
-	}
-	else if (event.type=="reject"){
-		_status.innerHTML="invalid move by "+event.token;
-	}
-	else if (event.type=="finish"){
-		_status.innerHTML="game over. winner:"+event.token;
-	}
-	else if (event.type=="start"){
-		clear();
-		redraw();
-	    _status.innerHTML="new game started";
-	}
-  });
+  result={
+		  receiveEvent:function(event){
+		 if (event.type=="init"){
+			 token=event.token;
+		 }
+		 else if (event.type=="take" || event.type=="flip"){
+	      		_buttons[key(event.row,event.column)].value=event.token[0];
+		 }
+		else if (event.type=="next"){
+			_status.innerHTML=event.token + " is next";
+		}
+		else if (event.type=="reject"){
+			_status.innerHTML="invalid move by "+event.token;
+		}
+		else if (event.type=="finish"){
+			_status.innerHTML="game over. winner:"+event.token;
+		}
+		else if (event.type=="start"){
+			clear();
+			redraw();
+		    _status.innerHTML="new game started";
+		}
+	 }      
+  };
+  controller.addEventListener("EventReceived",result.receiveEvent);
+  return result;
 }

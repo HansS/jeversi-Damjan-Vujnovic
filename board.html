@@ -15,10 +15,11 @@
 </table>
 <script type="text/javascript">
 	var game=jeversi.createGame();
-	var whiteFrame=createGameFrame(document.getElementById("white"), game, "white");
-	var blackFrame=createGameFrame(document.getElementById("black"), game, "black");
+	var whiteFrame=createGameFrame(document.getElementById("white"), game);
+	var blackFrame=createGameFrame(document.getElementById("black"), game);
 	document.getElementById("start").onclick=game.start;
-	
+	whiteFrame.receiveEvent(jeversi.createEvent("init","white"));
+	blackFrame.receiveEvent(jeversi.createEvent("init","black"));	
 </script>
 
 
