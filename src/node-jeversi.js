@@ -30,5 +30,5 @@
 		clientSocket.on("disconnect", function () {
 			console.log("onDisconnect");
 		});
-	}); 
+	});
 })();
