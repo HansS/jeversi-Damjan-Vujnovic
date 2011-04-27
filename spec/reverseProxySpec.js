@@ -14,7 +14,7 @@ describe("ReverseProxy", function () {
 		var game = observable({  place:function(){} });
 		spyOn(game,"place");			
 		jeversi.createReverseProxy(game,"white", socket);		
-		wire(["place","white",3,4]);		
+		wire(jeversi.createEvent("place","white",3,4));		
 		expect(game.place).toHaveBeenCalledWith("white",3,4);
 	});
 	

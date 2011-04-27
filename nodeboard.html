@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Game Runner</title>
+  <script src="socket.io/socket.io.js"></script> 
+  <script type="text/javascript" src="src/observable.js"></script>
+  <script type="text/javascript" src="src/Game.js"></script>
+  <script type="text/javascript" src="src/proxy.js"></script>
+  <script type="text/javascript" src="src/GameFrame.js"></script>
+  <link rel="stylesheet" type="text/css" href="game.css">
+</head>
+<body>
+<table cellspacing="0" cellpadding="0" style="border:1px solid black; width:600px;">
+<tr><td><div id="frame" class="gameboard" /></td></tr>
+</table>
+<script type="text/javascript">
+    var socket = new io.Socket('localhost', { port: 8888 }); 
+    socket.connect();
+    var proxy=jeversi.createProxy(socket);
+	var frame=createGameFrame(document.getElementById("frame"), proxy);
+	socket.on('connect', function(){ alert("connected");});
+ 	socket.on('disconnect', function(){ alert("disconnected"); }) 
+</script>
+</body>
+</html>
