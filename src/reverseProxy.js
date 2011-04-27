@@ -1,8 +1,10 @@
 jeversi.createReverseProxy = function (game, token, socket) {
-	game.addEventListener("EventReceived",function(e){socket.send(e);});
-	socket.on("message", function(evt) {
-		console.log("invoking: " + evt.type + " " + token );
-		game[evt.type](token,evt.row,evt.column);
+	game.addEventListener("EventReceived", function (event) {
+		socket.send(event);
+	});
+	socket.on("message", function (event) {
+		console.log("invoking", event.type, token);
+		game[event.type](token, event.row, event.column);
 	});
 	socket.send(jeversi.createEvent("init", token));
 };
