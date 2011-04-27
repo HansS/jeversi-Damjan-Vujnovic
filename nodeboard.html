@@ -1,26 +1,120 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Game Runner</title>
-  <script src="socket.io/socket.io.js"></script> 
-  <script type="text/javascript" src="src/observable.js"></script>
-  <script type="text/javascript" src="src/Game.js"></script>
-  <script type="text/javascript" src="src/proxy.js"></script>
-  <script type="text/javascript" src="src/GameFrame.js"></script>
-  <link rel="stylesheet" type="text/css" href="game.css">
+	<title>Welcome to Jeversi!</title>
+	<script type="text/javascript" src="socket.io/socket.io.js"></script> 
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script type="text/javascript" src="src/observable.js"></script>
+	<script type="text/javascript" src="src/Game.js"></script>
+	<script type="text/javascript" src="src/proxy.js"></script>
+	<script type="text/javascript" src="src/jeversiBoardWidget.js"></script>
+	<link rel="stylesheet" type="text/css" href="game.css"></link>
 </head>
 <body>
-<table cellspacing="0" cellpadding="0" style="border:1px solid black; width:600px;">
-<tr><td><div id="frame" class="gameboard" /></td></tr>
-</table>
-<script type="text/javascript">
-    var socket = new io.Socket('localhost', { port: 8888 }); 
-    socket.connect();
-    var proxy=jeversi.createProxy(socket);
-	var frame=createGameFrame(document.getElementById("frame"), proxy);
-	socket.on('connect', function(){ alert("connected");});
- 	socket.on('disconnect', function(){ alert("disconnected"); }) 
-</script>
+	<table cellspacing="0" cellpadding="0" style="border:1px solid black;">
+		<tr>
+			<td>
+				<div class="gameboard">
+					<h1 class="token">...</h1>
+					<span class="status"></span><br>
+					<table>
+						<tr>
+							<td><input type="button" row="1" col="1" value="-"></td>
+							<td><input type="button" row="1" col="2" value="-"></td>
+							<td><input type="button" row="1" col="3" value="-"></td>
+							<td><input type="button" row="1" col="4" value="-"></td>
+							<td><input type="button" row="1" col="5" value="-"></td>
+							<td><input type="button" row="1" col="6" value="-"></td>
+							<td><input type="button" row="1" col="7" value="-"></td>
+							<td><input type="button" row="1" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="2" col="1" value="-"></td>
+							<td><input type="button" row="2" col="2" value="-"></td>
+							<td><input type="button" row="2" col="3" value="-"></td>
+							<td><input type="button" row="2" col="4" value="-"></td>
+							<td><input type="button" row="2" col="5" value="-"></td>
+							<td><input type="button" row="2" col="6" value="-"></td>
+							<td><input type="button" row="2" col="7" value="-"></td>
+							<td><input type="button" row="2" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="3" col="1" value="-"></td>
+							<td><input type="button" row="3" col="2" value="-"></td>
+							<td><input type="button" row="3" col="3" value="-"></td>
+							<td><input type="button" row="3" col="4" value="-"></td>
+							<td><input type="button" row="3" col="5" value="-"></td>
+							<td><input type="button" row="3" col="6" value="-"></td>
+							<td><input type="button" row="3" col="7" value="-"></td>
+							<td><input type="button" row="3" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="4" col="1" value="-"></td>
+							<td><input type="button" row="4" col="2" value="-"></td>
+							<td><input type="button" row="4" col="3" value="-"></td>
+							<td><input type="button" row="4" col="4" value="-"></td>
+							<td><input type="button" row="4" col="5" value="-"></td>
+							<td><input type="button" row="4" col="6" value="-"></td>
+							<td><input type="button" row="4" col="7" value="-"></td>
+							<td><input type="button" row="4" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="5" col="1" value="-"></td>
+							<td><input type="button" row="5" col="2" value="-"></td>
+							<td><input type="button" row="5" col="3" value="-"></td>
+							<td><input type="button" row="5" col="4" value="-"></td>
+							<td><input type="button" row="5" col="5" value="-"></td>
+							<td><input type="button" row="5" col="6" value="-"></td>
+							<td><input type="button" row="5" col="7" value="-"></td>
+							<td><input type="button" row="5" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="6" col="1" value="-"></td>
+							<td><input type="button" row="6" col="2" value="-"></td>
+							<td><input type="button" row="6" col="3" value="-"></td>
+							<td><input type="button" row="6" col="4" value="-"></td>
+							<td><input type="button" row="6" col="5" value="-"></td>
+							<td><input type="button" row="6" col="6" value="-"></td>
+							<td><input type="button" row="6" col="7" value="-"></td>
+							<td><input type="button" row="6" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="7" col="1" value="-"></td>
+							<td><input type="button" row="7" col="2" value="-"></td>
+							<td><input type="button" row="7" col="3" value="-"></td>
+							<td><input type="button" row="7" col="4" value="-"></td>
+							<td><input type="button" row="7" col="5" value="-"></td>
+							<td><input type="button" row="7" col="6" value="-"></td>
+							<td><input type="button" row="7" col="7" value="-"></td>
+							<td><input type="button" row="7" col="8" value="-"></td>
+						</tr>
+						<tr>
+							<td><input type="button" row="8" col="1" value="-"></td>
+							<td><input type="button" row="8" col="2" value="-"></td>
+							<td><input type="button" row="8" col="3" value="-"></td>
+							<td><input type="button" row="8" col="4" value="-"></td>
+							<td><input type="button" row="8" col="5" value="-"></td>
+							<td><input type="button" row="8" col="6" value="-"></td>
+							<td><input type="button" row="8" col="7" value="-"></td>
+							<td><input type="button" row="8" col="8" value="-"></td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+		(function () {
+			var socket = new io.Socket("localhost", { port: 8888 });
+			socket.on("connect", function () {
+				console.log("Connected");
+			});
+			socket.on("disconnect", function () {
+				console.log("Disconnected")
+			}) 
+			socket.connect();
+			$(".gameboard").jeversiBoardWidget(jeversi.createProxy(socket));
+		})();
+	</script>
 </body>
 </html>
