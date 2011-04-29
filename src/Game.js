@@ -86,8 +86,8 @@ var jeversi = (function () {
 			for (row_direction = -1; row_direction <= 1; row_direction++) {
 				for (column_direction = -1; column_direction <= 1; column_direction++) {
 					if (row_direction || column_direction) {
-						chain = index.chain(row, column, row_direction, column_direction);
-						flipInChain = jeversi.flippable(chain, token);
+						var chain = index.chain(row, column, row_direction, column_direction);
+						var flipInChain = jeversi.flippable(chain, token);
 						result = result.concat(flipInChain);
 					}
 				}
@@ -95,7 +95,6 @@ var jeversi = (function () {
 			return result;
 		},
 		createGame: function (size, events) {
-			var _eventCount = 0,
 			_boardSize = size || 8,
 			_center = _boardSize / 2,
 			_events = events || [],
@@ -116,12 +115,6 @@ var jeversi = (function () {
 			game = observable({
 				getBoardSize: function () {
 					return _boardSize;
-				},
-				eventCount: function () {
-					return _events.length;
-				},
-				getEvents: function () {
-					return _events.slice(0);
 				},
 				pushEvent: function (event) {
 					game.dispatchEvent("EventReceived", event);
