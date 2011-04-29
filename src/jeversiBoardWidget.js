@@ -1,5 +1,5 @@
 jQuery.fn.extend({
-	jeversiBoardWidget: function (proxy) {
+	jeversiBoardWidget: function (proxy, initialEvents) {
 		return this.each(
 			function () {
 				var widget = jQuery(this),
@@ -31,12 +31,16 @@ jQuery.fn.extend({
 					finish: function (event) {
 						status.text("game over. winner:" + event.token);
 					}
-				};
-				eventStrategy.flip = eventStrategy.take;
-				proxy.addEventListener("EventReceived", function (event) {
+				},
+				onEventReceived = function (event) {
 					console.log("on" + event.type, event);
 					(eventStrategy[event.type] || nopStrategy)(event);
-				});
+				};
+				eventStrategy.flip = eventStrategy.take;
+				if (initialEvents) {
+					initialEvents.forEach(onEventReceived);
+				}
+				proxy.addEventListener("EventReceived", onEventReceived);
 				widget.click(function (event) {
 					var element = jQuery(event.target),
 					row = parseInt(element.attr("row"), 10),
