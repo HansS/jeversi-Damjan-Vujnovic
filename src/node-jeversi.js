@@ -1,3 +1,4 @@
+/*global console*/
 (function () {
 	var http = require("http"),
 	io = require("socket.io"),
@@ -10,9 +11,9 @@
 		jeversi.createReverseProxy(game, "white", whiteSocket);
 		jeversi.createReverseProxy(game, "black", blackSocket);
 		game.start();
-		whiteSocket = null;
+		whiteSocket = undefined;
 	};
-	server = http.createServer(function(req, res) { 
+	server = http.createServer(function (req, res) { 
 		console.log("http request: ", req.url);
 		req.addListener("end", function () {
 			file.serve(req, res);

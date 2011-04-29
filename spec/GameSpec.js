@@ -1,3 +1,4 @@
+/*global describe*/
 describe("next", function () {
 	it("should give last event of type next", function () {
 		var events = [
@@ -12,10 +13,12 @@ describe("flippable should return a continuous range of opposing tokens bound by
 	it("should return a single token if next is opposing", function () {
 		expect(jeversi.flippable([
 			jeversi.createEvent("take", "white", 1, 1),
-			jeversi.createEvent("take", "black", 1, 2)], "black")).toEqual([jeversi.createEvent("take", "white", 1, 1)]);
+			jeversi.createEvent("take", "black", 1, 2)
+		], "black")).toEqual([jeversi.createEvent("take", "white", 1, 1)]);
 		expect(jeversi.flippable([
 			jeversi.createEvent("take", "black", 2, 2),
-			jeversi.createEvent("take", "white", 1, 1)], "white")).toEqual([jeversi.createEvent("take", "black", 2, 2)]);
+			jeversi.createEvent("take", "white", 1, 1)
+		], "white")).toEqual([jeversi.createEvent("take", "black", 2, 2)]);
 	});
 	it("should return nothing if the range is empty", function () {
 		expect(jeversi.flippable([], "black")).toEqual([]);
@@ -29,11 +32,11 @@ describe("flippable should return a continuous range of opposing tokens bound by
 			jeversi.createEvent("take", "black", 1, 2),
 			jeversi.createEvent("take", "white", 1, 3),
 			jeversi.createEvent("take", "black", 1, 4)
-		],"black")).toEqual([
+		], "black")).toEqual([
 			jeversi.createEvent("take", "white", 1, 1)
 		]);
 	});
-	it ("should capture a continuous range", function () {
+	it("should capture a continuous range", function () {
 		expect(jeversi.flippable([
 			jeversi.createEvent("take", "white", 1, 1),
 			jeversi.createEvent("take", "white", 1, 2),
@@ -45,7 +48,7 @@ describe("flippable should return a continuous range of opposing tokens bound by
 			jeversi.createEvent("take", "white", 1, 3)
 		]);
 	});
-	it ("should ignore unbound ranges", function () {
+	it("should ignore unbound ranges", function () {
 		expect(jeversi.flippable([
 			jeversi.createEvent("take", "white", 1, 1),
 			jeversi.createEvent("take", "white", 1, 2),
@@ -55,7 +58,7 @@ describe("flippable should return a continuous range of opposing tokens bound by
 });
 
 describe("PositionIndex", function () {
-	var eventIndex;
+	var index;
 	beforeEach(function () {
 		index = jeversi.createPositionIndex();
 	});
@@ -68,14 +71,14 @@ describe("PositionIndex", function () {
 		expect(index.get(5, 4)).toBe(evt);
 		expect(index.size()).toBe(1);
 	});
-	it ("should ignore non field events", function () {
+	it("should ignore non field events", function () {
 		index.indexEvent(jeversi.createEvent("draw"));
 		expect(index.size()).toBe(0);
- 	});
+	});
 	it("should index events on different rows and columns", function () {
-		var evt = jeversi.createEvent("take", "white", 5, 4);
+		var evt = jeversi.createEvent("take", "white", 5, 4),
+		evt2 = jeversi.createEvent("take", "black", 5, 5);
 		index.indexEvent(evt);
-		var evt2 = jeversi.createEvent("take", "black", 5, 5);
 		index.indexEvent(evt2);
 		expect(index.get(5, 4)).toBe(evt);
 		expect(index.get(5, 5)).toBe(evt2);
@@ -90,21 +93,21 @@ describe("PositionIndex", function () {
 		expect(index.chain(2, 2, -1, -1)).toEqual([]);
 	});
 	it("chain should return a single event if row/column in a direction after event is empty", function () {
-		var evt=jeversi.createEvent("take", "white", 3, 3);
+		var evt = jeversi.createEvent("take", "white", 3, 3);
 		index.indexEvent(evt);
 		expect(index.chain(2, 2, 1, 1)).toEqual([evt]);
 	});
 	it("chain should return an uninterrupted sequence of events", function () {
-		var evt = jeversi.createEvent("take", "white", 3, 3);
-		var evt2 = jeversi.createEvent("take", "white", 4, 4);
+		var evt = jeversi.createEvent("take", "white", 3, 3),
+		evt2 = jeversi.createEvent("take", "white", 4, 4);
 		index.indexEvent(evt);
 		index.indexEvent(evt2);
 		index.indexEvent(jeversi.createEvent("take", "white", 6, 6));
-		expect(index.chain(2, 2, 1, 1)).toEqual([evt,evt2]);
+		expect(index.chain(2, 2, 1, 1)).toEqual([evt, evt2]);
 	});
 	it("chain should return a complete sequence of events if it hits a boundary", function () {
-		var evt = jeversi.createEvent("take", "white", 7, 7);
-		var evt2 = jeversi.createEvent("take", "white", 8, 8);
+		var evt = jeversi.createEvent("take", "white", 7, 7),
+		evt2 = jeversi.createEvent("take", "white", 8, 8);
 		index.indexEvent(evt);
 		index.indexEvent(evt2);
 		expect(index.chain(6, 6, 1, 1)).toEqual([evt, evt2]);
@@ -116,20 +119,23 @@ describe("PositionIndex", function () {
 		expect(index.get(5, 4)).toBe(evt);
 		expect(index.size()).toBe(1);
 	});
-	it ("tokenMajority should choose whoever has more tokens", function () {
+	it("tokenMajority should choose whoever has more tokens", function () {
 		var index = jeversi.createPositionIndex([
 			jeversi.createEvent("take", "white", 1, 1),
 			jeversi.createEvent("take", "white", 2, 1),
-			jeversi.createEvent("take", "black", 3, 1)]);
+			jeversi.createEvent("take", "black", 3, 1)
+		]);
 		expect(index.tokenMajority()).toBe("white");
 		index = jeversi.createPositionIndex([
 			jeversi.createEvent("take", "black", 1, 1),
 			jeversi.createEvent("take", "white", 2, 1),
-			jeversi.createEvent("take", "black", 3, 1)]);
+			jeversi.createEvent("take", "black", 3, 1)
+		]);
 		expect(index.tokenMajority()).toBe("black");
 		index = jeversi.createPositionIndex([
 			jeversi.createEvent("take", "white", 2, 1),
-			jeversi.createEvent("take", "black", 3, 1)]);
+			jeversi.createEvent("take", "black", 3, 1)
+		]);
 		expect(index.tokenMajority()).toBe("draw");
 	});
 });
@@ -142,9 +148,10 @@ describe("getFlippableTokens", function () {
 			jeversi.createEvent("take", "white", 1, 5), jeversi.createEvent("take", "white", 3, 5), jeversi.createEvent("take", "white", 5, 5),
 			jeversi.createEvent("take", "black", 2, 2), jeversi.createEvent("take", "black", 3, 2), jeversi.createEvent("take", "black", 4, 2),
 			jeversi.createEvent("take", "black", 2, 3), jeversi.createEvent("take", "black", 4, 3),
-			jeversi.createEvent("take", "black", 2, 4), jeversi.createEvent("take", "black", 3, 4), jeversi.createEvent("take", "black", 4, 4)];
-		var index = jeversi.createPositionIndex(events);
-		var result = jeversi.getFlippableTokens(index, "white", 3, 3);
+			jeversi.createEvent("take", "black", 2, 4), jeversi.createEvent("take", "black", 3, 4), jeversi.createEvent("take", "black", 4, 4)
+		],
+		index = jeversi.createPositionIndex(events),
+		result = jeversi.getFlippableTokens(index, "white", 3, 3);
 		expect(result).toContain(jeversi.createEvent("take", "black", 2, 2));
 		expect(result).toContain(jeversi.createEvent("take", "black", 3, 2));
 		expect(result).toContain(jeversi.createEvent("take", "black", 4, 2));
@@ -158,26 +165,30 @@ describe("getFlippableTokens", function () {
 });
 
 describe("Game", function () {
-	var game, previousCount,eventBuffer=[],
+	var game, previousCount, eventBuffer = [],
 	generatedEvents = function () {
-		copy=eventBuffer;
-		eventBuffer=[];
+		var copy = eventBuffer;
+		eventBuffer = [];
 		return copy;
-	};
-	clearEvents=function(){
-		eventBuffer=[];
+	},
+	clearEvents = function () {
+		eventBuffer = [];
 	};
 	beforeEach(function () {
 		game = jeversi.createGame();
 		game.start();
-		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });
+		game.addEventListener("EventReceived", function (event) {
+			eventBuffer.push(event);
+		});
 	});
 	it("should start with a start, four initial allocation events and a next", function () {
 		game = jeversi.createGame();
-		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });
+		game.addEventListener("EventReceived", function (event) {
+			eventBuffer.push(event);
+		});
 		game.start();
 		expect(generatedEvents()).toEqual([
-			jeversi.createEvent("start"),		                                  
+			jeversi.createEvent("start"),
 			jeversi.createEvent("take", "white", 4, 4),
 			jeversi.createEvent("take", "white", 5, 5),
 			jeversi.createEvent("take", "black", 5, 4),
@@ -185,11 +196,12 @@ describe("Game", function () {
 			jeversi.createEvent("next", "white")
 		]);
 	});
-		
 	it("should reject placement outside of bounds", function () {
 		game = jeversi.createGame(2);
 		game.start();
-		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });		
+		game.addEventListener("EventReceived", function (event) {
+			eventBuffer.push(event);
+		});
 		game.place("white", 3, 1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("reject", "white"));
 		game.place("white", 1, 3);
@@ -197,7 +209,6 @@ describe("Game", function () {
 		game.place("white", 2, -1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("reject", "white"));
 	});
-		
 	it("should reject a command if not that players turn", function () {
 		game.place("black", 4, 3);
 		expect(generatedEvents()).toEqual([jeversi.createEvent("reject", "black")]);
@@ -224,12 +235,14 @@ describe("Game", function () {
 	});
 	it("should not allow the opposing token to play if there are no flippable tokens. the following scenario allows only white to play after 3,1", function () {
 		game = jeversi.createGame(4, [
-			jeversi.createEvent("take","white", 2, 1),
-			jeversi.createEvent("take","black", 3, 1),
-			jeversi.createEvent("take","black", 2, 2),
-			jeversi.createEvent("next","white")]);
-		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });		
-		
+			jeversi.createEvent("take", "white", 2, 1),
+			jeversi.createEvent("take", "black", 3, 1),
+			jeversi.createEvent("take", "black", 2, 2),
+			jeversi.createEvent("next", "white")
+		]);
+		game.addEventListener("EventReceived", function (event) {
+			eventBuffer.push(event);
+		});
 		game.place("white", 4, 1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("next", "white"));
 	});
@@ -237,8 +250,11 @@ describe("Game", function () {
 		game = jeversi.createGame(4, [
 			jeversi.createEvent("take", "white", 2, 1),
 			jeversi.createEvent("take", "black", 3, 1),
-			jeversi.createEvent("next", "white")]);
-		game.addEventListener("EventReceived", function (e) { eventBuffer.push(e); });		
+			jeversi.createEvent("next", "white")
+		]);
+		game.addEventListener("EventReceived", function (event) {
+			eventBuffer.push(event);
+		});
 		game.place("white", 4, 1);
 		expect(generatedEvents()).toContain(jeversi.createEvent("finish", "white"));
 	});

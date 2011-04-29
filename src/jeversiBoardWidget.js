@@ -2,7 +2,9 @@ jQuery.fn.extend({
 	jeversiBoardWidget: function (proxy) {
 		return this.each(
 			function () {
-				var widget = jQuery(this), status = widget.find(".status"), token,
+				var widget = jQuery(this),
+				buttons = widget.find(":button"),
+				status = widget.find(".status"), token,
 				nopStrategy = function (event) {
 					console.log("No strategy for ", event);
 				},
@@ -15,7 +17,10 @@ jQuery.fn.extend({
 						widget.find(":button").val("-");
 					},
 					take: function (event) {
-						jQuery(widget.find(":button")[8 * (event.row - 1) + event.column - 1]).val(event.token[0]);
+						jQuery(buttons[8 * (event.row - 1) + event.column - 1])
+							.fadeOut()
+							.val(event.token[0])
+							.fadeIn();
 					},
 					next: function (event) {
 						status.text(event.token + " is next");

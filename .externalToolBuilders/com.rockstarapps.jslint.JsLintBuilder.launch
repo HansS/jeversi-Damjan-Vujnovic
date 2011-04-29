@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.ui.externaltools.ProgramBuilderLaunchConfigurationType">
+<booleanAttribute key="org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED" value="false"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_DISABLED_BUILDER" value="com.rockstarapps.jslint.JsLintBuilder"/>
+<mapAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS">
+<mapEntry key="buildAll" value="false"/>
+<mapEntry key="properties" value="params = {passfail: false,debug: false,undef: true,white: true,evil: false,nomen: true,browser: false,cap: false,eqeqeq: true,widget: false,on: false,plusplus: true,sidebar: false,fragment: false,bitwise: true,rhino: false,laxbreak: false,regexp: true,safe: false,forin: false,onevar: true,adsafe: false,sub: false,strict: false,css: false,newcap: true,maxerrors:50,indent:4};"/>
+<mapEntry key="selection" value="src/Game.js&lt;--&gt;src/jeversiBoardWidget.js&lt;--&gt;src/node-jeversi.js&lt;--&gt;src/observable.js&lt;--&gt;src/proxy.js&lt;--&gt;src/reverseProxy.js&lt;--&gt;spec/GameSpec.js&lt;--&gt;spec/jeversiBoardWidgetSpec.js&lt;--&gt;spec/observableSpec.js&lt;--&gt;spec/proxySpec.js&lt;--&gt;spec/reverseProxySpec.js"/>
+<mapEntry key="external_defines" value="global beforeEach, console, describe, document, expect, it, jasmine, jeversi, jQuery, observable, require, spyOn, $"/>
+</mapAttribute>
+<booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>
+</launchConfiguration>

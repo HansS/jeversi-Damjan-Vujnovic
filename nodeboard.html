@@ -2,12 +2,6 @@
 <html>
 <head>
 	<title>Welcome to Jeversi!</title>
-	<script type="text/javascript" src="socket.io/socket.io.js"></script> 
-	<script type="text/javascript" src="lib/jquery.js"></script>
-	<script type="text/javascript" src="src/observable.js"></script>
-	<script type="text/javascript" src="src/Game.js"></script>
-	<script type="text/javascript" src="src/proxy.js"></script>
-	<script type="text/javascript" src="src/jeversiBoardWidget.js"></script>
 	<link rel="stylesheet" type="text/css" href="game.css"></link>
 </head>
 <body>
@@ -103,6 +97,12 @@
 			</td>
 		</tr>
 	</table>
+	<script type="text/javascript" src="socket.io/socket.io.js"></script> 
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script type="text/javascript" src="src/observable.js"></script>
+	<script type="text/javascript" src="src/Game.js"></script>
+	<script type="text/javascript" src="src/proxy.js"></script>
+	<script type="text/javascript" src="src/jeversiBoardWidget.js"></script>
 	<script type="text/javascript">
 		(function () {
 			var socket = new io.Socket("localhost", { port: 8888 });
@@ -113,7 +113,9 @@
 				console.log("Disconnected")
 			}) 
 			socket.connect();
-			$(".gameboard").jeversiBoardWidget(jeversi.createProxy(socket));
+			$(function () {
+				$(".gameboard").jeversiBoardWidget(jeversi.createProxy(socket));
+			});
 		})();
 	</script>
 </body>

@@ -20,6 +20,11 @@
 	<script type="text/javascript" src="spec/jeversiBoardWidgetSpec.js"></script>
 </head>
 <body>
+	<script type="text/javascript">
+		jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+		jasmine.getEnv().execute();
+		setTimeout(function () { window.location.reload(); }, 1000);
+	</script>
 	<div id="jeversiBoardWidget" class="gameboard">
 		<h1 class="token">...</h1>
 		<span class="status"></span><br>
@@ -106,10 +111,5 @@
 			</tr>
 		</table>
 	</div>
-	<script type="text/javascript">
-		jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-		jasmine.getEnv().execute();
-		setTimeout(function () { window.location.reload(); }, 1000);
-	</script>
 </body>
 </html>

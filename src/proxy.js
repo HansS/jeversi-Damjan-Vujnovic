@@ -1,3 +1,4 @@
+/*global console*/
 jeversi.createProxy = function (socket) {
 	var proxy = observable({
 		place: function (token, row, column) {
