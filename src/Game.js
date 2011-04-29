@@ -95,8 +95,7 @@ var jeversi = (function () {
 			return result;
 		},
 		createGame: function (size, initialEvents) {
-			var eventCount = 0,
-			boardSize = size || 8,
+			var boardSize = size || 8,
 			center = boardSize / 2,
 			events = initialEvents || [],
 			validPosition = function (row, column) {
@@ -116,12 +115,6 @@ var jeversi = (function () {
 			game = observable({
 				getBoardSize: function () {
 					return boardSize;
-				},
-				eventCount: function () {
-					return events.length;
-				},
-				getEvents: function () {
-					return events.slice(0);
 				},
 				pushEvent: function (event) {
 					game.dispatchEvent("EventReceived", event);

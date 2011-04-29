@@ -1,0 +1,10 @@
+- server user management: announce users, show waiting status...
+- usernames not just white/black
+- integrated login through google/twitter/fb?
+- better ui? graphics?
+
+- page refresh protection, reconnection
+- server statistics (won/lost per player)
+- stress test
+- memory leak test
+
