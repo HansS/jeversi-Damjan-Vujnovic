@@ -82,7 +82,7 @@ var jeversi = (function () {
 			return [];
 		},
 		getFlippableTokens: function (index, token, row, column) {
-			var result = [], row_direction, column_direction, chain, flipInChain;
+			var result = [], row_direction, column_direction;
 			for (row_direction = -1; row_direction <= 1; row_direction++) {
 				for (column_direction = -1; column_direction <= 1; column_direction++) {
 					if (row_direction || column_direction) {
