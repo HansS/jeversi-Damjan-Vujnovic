@@ -8,3 +8,7 @@
 - stress test
 - memory leak test
 
+- observable collections. pushevent should really be just _events.push with an observer that triggers an external event 
+- should observable.addListener be aliased with observable.on to be compatible with EventEmiter in node?
+- deal with static functions next/flippable/chain etc... do they belong to a value object we don't know about? 
+- stop persisting events?
