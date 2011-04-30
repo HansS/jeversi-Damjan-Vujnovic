@@ -26,6 +26,7 @@
 	<script type="text/javascript" src="src/Game.js"></script>
 	<script type="text/javascript" src="src/jeversiBoard.js"></script>
 	<script type="text/javascript" src="src/jeversiBoardWidget.js"></script>
+	<script type="text/javascript" src="src/jeversiRobot.js"></script>
 	<script type="text/javascript">
 		(function () {
 			var game = jeversi.createGame();
@@ -33,6 +34,8 @@
 			jeversi.drawBoard(document.getElementById("jeversiBoardWidgetBlack"));
 			$("#jeversiBoardWidgetWhite").jeversiBoardWidget(game, [jeversi.createEvent("init","white")]);
 			$("#jeversiBoardWidgetBlack").jeversiBoardWidget(game, [jeversi.createEvent("init","black")]);
+			jeversi.createRobot(game,"white", jeversi.minUpToThresholdFlippableStrategy(64));
+			jeversi.createRobot(game,"black", jeversi.minUpToThresholdFlippableStrategy(0));
 			$("#start").click(game.start);
 		})();
 	</script>

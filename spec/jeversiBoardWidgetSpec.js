@@ -39,8 +39,13 @@ describe("jeversiBoardWidget", function () {
 		expect(widget.find(".status").text()).toBe("invalid move by white");
 	});
 	it("should show 'game over. winner:white|black' status when finish event is received", function () {
-		dispatchEvent("finish", "black");
-		expect(widget.find(".status").text()).toBe("game over. winner:black");
+		proxy.dispatchEvent("EventReceived", {
+			type: "finish",
+			outcome: "black",
+			black: 5,
+			white: 3
+		});
+		expect(widget.find(".status").text()).toBe("game over. winner:black 5:3");
 	});
 	it("should invoke proxy.place when button is clicked", function () {
 		dispatchEvent("init", "black");

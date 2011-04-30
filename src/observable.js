@@ -36,6 +36,10 @@ var observable = function (base) {
 					break;
 				}
 			} catch (e) {
+				console.log(e);
+//				setTimeout(function () {
+//					throw e;
+//				}, 0);
 			}
 		}
 	};

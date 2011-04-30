@@ -29,7 +29,7 @@ jQuery.fn.extend({
 						status.text("invalid move by " + event.token);
 					},
 					finish: function (event) {
-						status.text("game over. winner:" + event.token);
+						status.text("game over. winner:" + event.outcome + " " + Math.max(event.black, event.white) + ":" + Math.min(event.black, event.white));
 					}
 				},
 				onEventReceived = function (event) {
