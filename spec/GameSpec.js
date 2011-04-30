@@ -1,4 +1,4 @@
-/*global describe*/
+/*global beforeEach, describe, expect, it, jeversi*/
 describe("next", function () {
 	it("should give last event of type next", function () {
 		var events = [

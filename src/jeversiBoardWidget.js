@@ -1,3 +1,4 @@
+/*global console, jQuery*/
 jQuery.fn.extend({
 	jeversiBoardWidget: function (proxy, initialEvents) {
 		return this.each(

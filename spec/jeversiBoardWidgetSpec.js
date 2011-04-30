@@ -1,3 +1,4 @@
+/*global $, beforeEach, describe, expect, it, jeversi, observable, spyOn*/
 describe("jeversiBoardWidget", function () {
 	var proxy = observable({
 		place: function (token, row, column) {

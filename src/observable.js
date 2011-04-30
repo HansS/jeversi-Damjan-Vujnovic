@@ -1,3 +1,4 @@
+/*global console*/
 var observable = function (base) {
 	var eventListenersByType = {};
 	base.addEventListener = function (type, listener, priority) {

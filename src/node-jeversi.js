@@ -1,4 +1,4 @@
-/*global console*/
+/*global console, jeversi, require*/
 (function () {
 	var http = require("http"),
 	io = require("socket.io"),

@@ -1,3 +1,4 @@
+/*global console, observable*/
 var jeversi = (function () {
 	var opposing = function (token) {
 		return token === "white" ? "black" : "white";
@@ -137,7 +138,7 @@ var jeversi = (function () {
 				},
 				place: function (token, row, column) {
 					console.log(token, row, column);
-					var index = jeversi.createPositionIndex(events), tokenCounts
+					var index = jeversi.createPositionIndex(events), tokenCounts,
 					flippableTokens = jeversi.getFlippableTokens(index, token, row, column);
 					if (!validPosition(row, column) || jeversi.next(events) !== token || index.get(row, column) || !flippableTokens.length) {
 						game.pushEvent(jeversi.createEvent("reject", token));

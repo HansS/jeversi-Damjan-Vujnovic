@@ -1,4 +1,4 @@
-/*global console*/
+/*global console, jeversi*/
 jeversi.createReverseProxy = function (game, token, socket) {
 	game.addEventListener("EventReceived", function (event) {
 		socket.send(event);

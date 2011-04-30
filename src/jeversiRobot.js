@@ -1,36 +1,45 @@
-jeversi.createRobot = function (game, token,strategy) {
-	var _events=[];
-	game.addEventListener("EventReceived", function (event) {
-		_events.push(event);
-		if ((event.type==="next" && event.token===token) ||(event.type==="reject" && jeversi.next(_events)===token)){
-			var where=strategy(token,jeversi.createPositionIndex(_events));
+/*global jeversi*/
+jeversi.createRobot = function (game, strategy, initialEvents) {
+	var events = initialEvents || [], token, processEvent = function (event) {
+		var where;
+		events.push(event);
+		if (event.type === "init") {
+			token = event.token;
+		} else if ((event.type === "next" && event.token === token) || (event.type === "reject" && jeversi.next(events) === token)) {
+			where = strategy(token, jeversi.createPositionIndex(events));
 			setTimeout(function () {
 				game.place(token, where.row, where.column);
 			}, 100);
 		}
-	});
+	};
+	events.forEach(processEvent);
+	game.addEventListener("EventReceived", processEvent);
 };
 
-jeversi.firstFlippableStrategy=function (token,index) {
-	for (var row=1; row<=8; row++) {
-		for (var column=1; column<=8; column++)
-		 	if (!index.get(row, column) && jeversi.getFlippableTokens(index,token,row,column).length)
+jeversi.firstFlippableStrategy = function (token, index) {
+	var row, column;
+	for (row = 1; row <= 8; row += 1) {
+		for (column = 1; column <= 8; column += 1) {
+			if (!index.get(row, column) && jeversi.getFlippableTokens(index, token, row, column).length) {
 				return {
 					row: row,
-					column:column
+					column: column
 				};
+			}
+		}
 	}
-}
+};
 
 jeversi.minUpToThresholdFlippableStrategy = function (threshold) {
 	return function (token, index) {
-		var isMin = index.size() < threshold;
-		var best = isMin ? 64 : 0;
-		for (var row = 1; row <= 8; row++) {
-			for (var column = 1; column <= 8; column++) {
+		var isMin = index.size() < threshold,
+		best = isMin ? 64 : 0,
+		row, column, flippable, result;
+		for (row = 1; row <= 8; row += 1) {
+			for (column = 1; column <= 8; column += 1) {
 				if (!index.get(row, column)) {
-					var flippable = jeversi.getFlippableTokens(index, token, row, column).length;
-					if (flippable > 0 && (isMin ? flippable < best : flippable > best)) {
+					flippable = jeversi.getFlippableTokens(index, token, row, column).length;
+					if (flippable && (isMin ? flippable < best : flippable > best)) {
 						result = {
 							row: row,
 							column: column
@@ -41,5 +50,5 @@ jeversi.minUpToThresholdFlippableStrategy = function (threshold) {
 			}
 		}
 		return result;
-	}
-}
+	};
+};

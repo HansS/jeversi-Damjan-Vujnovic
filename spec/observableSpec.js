@@ -1,3 +1,4 @@
+/*global beforeEach, describe, expect, it, jasmine, observable, spyOn*/
 describe('observable', function () {
 	it('should use observable as a mixin', function () {
 		var base = {}, result;

@@ -1,3 +1,4 @@
+/*global beforeEach, describe, expect, it, jasmine, jeversi, observable, spyOn*/
 describe("ReverseProxy", function () {
 	it("should send init event when creted", function () {
 		var socket = {
