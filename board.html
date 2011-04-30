@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Game Runner</title>
+	<link rel="stylesheet" type="text/css" href="game.css">
+</head>
+<body>
+	<table cellspacing="0" cellpadding="0" style="border:1px solid black;">
+		<tr>
+			<td>
+				<div id="jeversiBoardWidgetWhite" />
+			</td>
+			<td>
+				<div id="jeversiBoardWidgetBlack" />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+				<input type="button" id="start" value="start" />
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script type="text/javascript" src="src/observable.js"></script>
+	<script type="text/javascript" src="src/Game.js"></script>
+	<script type="text/javascript" src="src/jeversiBoard.js"></script>
+	<script type="text/javascript" src="src/jeversiBoardWidget.js"></script>
+	<script type="text/javascript" src="src/jeversiRobot.js"></script>
+	<script type="text/javascript">
+		/*global $, jeversi*/
+		(function () {
+			var game = jeversi.createGame();
+			jeversi.drawBoard(document.getElementById("jeversiBoardWidgetWhite"));
+			jeversi.drawBoard(document.getElementById("jeversiBoardWidgetBlack"));
+			$("#jeversiBoardWidgetWhite").jeversiBoardWidget(game, [jeversi.createEvent("init", "white")]);
+			$("#jeversiBoardWidgetBlack").jeversiBoardWidget(game, [jeversi.createEvent("init", "black")]);
+			jeversi.createRobot(game, jeversi.minUpToThresholdFlippableStrategy(64), [jeversi.createEvent("init", "white")]);
+			jeversi.createRobot(game, jeversi.minUpToThresholdFlippableStrategy(0), [jeversi.createEvent("init", "black")]);
+			$("#start").click(game.start);
+		})();
+	</script>
+</body>
+</html>

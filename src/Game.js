@@ -1,3 +1,4 @@
+/*global console, observable*/
 var jeversi = (function () {
 	var opposing = function (token) {
 		return token === "white" ? "black" : "white";
@@ -34,18 +35,15 @@ var jeversi = (function () {
 					}
 					return resultchain;
 				},
-				tokenMajority: function () {
-					var majority = 0, key;
+				countTokens: function () {
+					var key, result = {
+						black: 0,
+						white: 0
+					};
 					for (key in index) {
-						majority += index[key].token === "white" ? 1 : -1;
+						result[index[key].token] += 1;
 					}
-					if (majority > 0) {
-						return "white";
-					}
-					if (majority < 0) {
-						return "black";
-					}
-					return "draw";
+					return result;
 				}
 			};
 			if (events) {
@@ -53,12 +51,22 @@ var jeversi = (function () {
 			}
 			return positionIndex;
 		},
-		createEvent: function (eventType, token, row, column) {
+		declareWinner: function (counts) {
+			if (counts.white > counts.black) {
+				return "white";
+			}
+			if (counts.black > counts.white) {
+				return "black";
+			}
+			return "draw";
+		},
+		createEvent: function (eventType, token, row, column, finalResult) {
 			var result = {
 				type: eventType,
 				token: token,
 				row: row,
-				column: column
+				column: column,
+				finalResult: finalResult
 			};
 			return result;
 		},
@@ -129,7 +137,8 @@ var jeversi = (function () {
 					jeversi.createEvent("next", "white")].forEach(game.pushEvent);
 				},
 				place: function (token, row, column) {
-					var index = jeversi.createPositionIndex(events),
+					console.log(token, row, column);
+					var index = jeversi.createPositionIndex(events), tokenCounts,
 					flippableTokens = jeversi.getFlippableTokens(index, token, row, column);
 					if (!validPosition(row, column) || jeversi.next(events) !== token || index.get(row, column) || !flippableTokens.length) {
 						game.pushEvent(jeversi.createEvent("reject", token));
@@ -145,7 +154,13 @@ var jeversi = (function () {
 					} else if (hasFlippable(token, index)) {
 						game.pushEvent(jeversi.createEvent("next", token));
 					} else {
-						game.pushEvent(jeversi.createEvent("finish", index.tokenMajority()));
+						tokenCounts = index.countTokens();
+						game.pushEvent({
+							type: "finish",
+							white: tokenCounts.white,
+							black: tokenCounts.black,
+							outcome: jeversi.declareWinner(tokenCounts)
+						});
 					}
 				}
 			});

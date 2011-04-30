@@ -1,4 +1,4 @@
-/*global describe*/
+/*global beforeEach, describe, expect, it, jeversi*/
 describe("next", function () {
 	it("should give last event of type next", function () {
 		var events = [
@@ -54,6 +54,19 @@ describe("flippable should return a continuous range of opposing tokens bound by
 			jeversi.createEvent("take", "white", 1, 2),
 			jeversi.createEvent("take", "white", 1, 3)
 		])).toEqual([]);
+	});
+});
+
+describe("declareWinner", function () {
+	it("should return", function () {
+		expect(jeversi.declareWinner({
+			black: 0,
+			white: 27
+		})).toBe("white");
+		expect(jeversi.declareWinner({
+			black: 27,
+			white: 0
+		})).toBe("black");
 	});
 });
 
@@ -119,24 +132,27 @@ describe("PositionIndex", function () {
 		expect(index.get(5, 4)).toBe(evt);
 		expect(index.size()).toBe(1);
 	});
-	it("tokenMajority should choose whoever has more tokens", function () {
+	it("countTokens should count black and white tokens", function () {
 		var index = jeversi.createPositionIndex([
 			jeversi.createEvent("take", "white", 1, 1),
 			jeversi.createEvent("take", "white", 2, 1),
 			jeversi.createEvent("take", "black", 3, 1)
 		]);
-		expect(index.tokenMajority()).toBe("white");
-		index = jeversi.createPositionIndex([
-			jeversi.createEvent("take", "black", 1, 1),
-			jeversi.createEvent("take", "white", 2, 1),
-			jeversi.createEvent("take", "black", 3, 1)
-		]);
-		expect(index.tokenMajority()).toBe("black");
-		index = jeversi.createPositionIndex([
-			jeversi.createEvent("take", "white", 2, 1),
-			jeversi.createEvent("take", "black", 3, 1)
-		]);
-		expect(index.tokenMajority()).toBe("draw");
+		expect(index.countTokens()).toEqual({
+			black: 1,
+			white: 2
+		});
+//		index = jeversi.createPositionIndex([
+//			jeversi.createEvent("take", "black", 1, 1),
+//			jeversi.createEvent("take", "white", 2, 1),
+//			jeversi.createEvent("take", "black", 3, 1)
+//		]);
+//		expect(index.tokenMajority()).toBe("black");
+//		index = jeversi.createPositionIndex([
+//			jeversi.createEvent("take", "white", 2, 1),
+//			jeversi.createEvent("take", "black", 3, 1)
+//		]);
+//		expect(index.tokenMajority()).toBe("draw");
 	});
 });
 
@@ -256,6 +272,11 @@ describe("Game", function () {
 			eventBuffer.push(event);
 		});
 		game.place("white", 4, 1);
-		expect(generatedEvents()).toContain(jeversi.createEvent("finish", "white"));
+		expect(generatedEvents()).toContain({
+			type: "finish",
+			outcome: "white",
+			white: 3,
+			black: 0
+		});
 	});
 });

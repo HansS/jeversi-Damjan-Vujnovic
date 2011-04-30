@@ -1,3 +1,4 @@
+/*global console*/
 var observable = function (base) {
 	var eventListenersByType = {};
 	base.addEventListener = function (type, listener, priority) {
@@ -36,6 +37,10 @@ var observable = function (base) {
 					break;
 				}
 			} catch (e) {
+				console.log(e);
+//				setTimeout(function () {
+//					throw e;
+//				}, 0);
 			}
 		}
 	};
