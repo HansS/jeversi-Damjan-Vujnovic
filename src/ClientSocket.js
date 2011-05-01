@@ -15,13 +15,14 @@ Socket = function (host, options) {
 	var socket;
 	function heartBeat(hb) {
 		setTimeout(function () {
-			console.log("sending heartbeat");
+			if (debug) {
+				util.log("sending heartbeat");
+			}
 			socket.send(ioutils.encode('~h~' + hb));
 		}, 5000);
 	};
 	socket=new WebSocket(url, 'borf');
 	socket.onopen = function () {
-		//console.log("socket open");
 		open=true;
 		self.emit('connect');
 	};
@@ -31,7 +32,7 @@ Socket = function (host, options) {
 	};
 	var session_id;
 	socket.onmessage = function (event) {
-		util.log(event.data);
+		if (debug) { util.log("received:"+event);}
 		var rawmsg = ioutils.decode(event.data)[0],
 		frame = rawmsg.substr(0, 3);
 		if (!session_id) {
@@ -42,7 +43,7 @@ Socket = function (host, options) {
 		}
 		else {
 			try{
-				self.emit('message', JSON.parse(rawmsg));
+				self.emit('message', JSON.parse(rawmsg.substring(3)));
 			}
 			catch (e){
 				self.emit('message', rawmsg);
@@ -50,6 +51,8 @@ Socket = function (host, options) {
 		}
 	};
 	this.send=function(msg){
+		if (debug)
+			util.log("sending" + msg);
 		socket.send(ioutils.encode(msg));
 	}
 };
